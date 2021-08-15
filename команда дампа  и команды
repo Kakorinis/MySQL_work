@@ -1,0 +1,102 @@
+дамп делал из файла Script.sql где содержалась вся инфа по БД, по другому не понял как скопировать именно БД в другую БД, а не данные из файла в в конкретную БД 
+sudo mysqldump -u Kakorinis -p sample < /home/user/snap/dbeaver-ce/138/Script.sql 
+
+остальное:
+что я только не делал, и от рута заходил в системную папку mysql и копировал оттуда файл .sql пока не понял что в dbeaver можно создавать скрипт и сохранять его в свою рабочую директорию...
+
+Одну таблицу я создал через dbeaver, она отобразилась в БД, создался отдельный файл с расширением этой таблицы, но не понял как сделать так чтобы вся инфа с конкретной БД выгрузилась в отдельный файл .sql, чтобы не пришлось вручную копировать все команды, собирая всю проделанную работу в этом одном файле .sql
+
+
+Ниже я сначала создал таблицу сначала в дибивере и в консоли проверял ее корректность:
+
+mysql> SHOW tables;
+ERROR 1046 (3D000): No database selected
+mysql> USE example;
+mysql> SHOW tables;
++-------------------+
+| Tables_in_example |
++-------------------+
+| users             |
++-------------------+
+1 row in set (0,00 sec)
+
+mysql> DESCRIBE users;
++---------+--------------+------+-----+---------+-------+
+| Field   | Type         | Null | Key | Default | Extra |
++---------+--------------+------+-----+---------+-------+
+| ID      | int unsigned | NO   |     | NULL    |       |
+| Column1 | varchar(100) | YES  |     | NULL    |       |
++---------+--------------+------+-----+---------+-------+
+
+mysql> SELECT * FROM users;
++----+-------+
+| ID | Name  |
++----+-------+
+|  1 | Denis |
+|  2 | Ilya  |
+|  3 | Sasha |
++----+-------+
+
+
+Дальше пробовал создать таблицу в терминале
+
+mysql> CREATE TABLE tutorials_tbl(
+    -> Number INT NOT NULL,
+    -> Type VARCHAR(10),
+    -> Name VARCHAR(20)
+    -> );
+Query OK, 0 rows affected (0,59 sec)
+
+mysql> SHOW tables;
++-------------------+
+| Tables_in_example |
++-------------------+
+| tutorials_tbl     |
+| users             |
++-------------------+
+2 rows in set (0,00 sec)
+
+mysql> RENAME TABLE tutorials_tbl TO stuff;
+Query OK, 0 rows affected (0,50 sec)
+
+mysql> SHOW tables;
++-------------------+
+| Tables_in_example |
++-------------------+
+| stuff             |
+| users             |
++-------------------+
+2 rows in set (0,01 sec)
+
+mysql> INSERT INTO stuff (Number, Type, Name)
+    -> VALUES (1,'teacher','Elena Kovalenko');
+Query OK, 1 row affected (0,15 sec)
+
+mysql> SELECT * FROM stuff;
++--------+---------+-----------------+
+| Number | Type    | Name            |
++--------+---------+-----------------+
+|      1 | teacher | Elena Kovalenko |
++--------+---------+-----------------+
+1 row in set (0,00 sec)
+
+mysql> INSERT INTO stuff (Number, Type, Name)
+    -> VALUES (2, 'teacher', 'Kirill Ivanov')
+    -> ;
+Query OK, 1 row affected (0,09 sec)
+
+mysql> INSERT INTO stuff (Number, Type, Name)
+    -> VALUES (3,'helper','Boris Toboltcev')
+    -> ;
+Query OK, 1 row affected (0,07 sec)
+
+mysql> SELECT * FROM stuff;
++--------+---------+-----------------+
+| Number | Type    | Name            |
++--------+---------+-----------------+
+|      1 | teacher | Elena Kovalenko |
+|      2 | teacher | Kirill Ivanov   |
+|      3 | helper  | Boris Toboltcev |
++--------+---------+-----------------+
+3 rows in set (0,00 sec)
+
